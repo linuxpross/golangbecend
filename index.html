@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой мини блог</title>
+</head>
+<body>
+    <h1>Мой мини блог</h1>
+    <ul id="post-list">
+        <!-- Здесь будет список постов -->
+    </ul>
+
+    <!-- Форма для добавления нового поста -->
+    <h2>Добавить новый пост</h2>
+    <form id="new-post-form">
+        <label for="title">Заголовок:</label><br>
+        <input type="text" id="title" name="title" required><br>
+        <label for="content">Содержание:</label><br>
+        <textarea id="content" name="content" required></textarea><br>
+        <button type="submit">Добавить пост</button>
+    </form>
+
+    <!-- Скрипт для загрузки списка постов и отправки нового поста -->
+    <script src="script.js">
+        // Функция для загрузки списка постов при загрузке страницы
+document.addEventListener("DOMContentLoaded", function() {
+    fetchPosts();
+});
+
+// Функция для отправки нового поста при отправке формы
+document.getElementById("new-post-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    var formData = new FormData(this);
+
+    fetch("/posts", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(newPost => {
+        // После успешного добавления поста, обновляем список постов
+        fetchPosts();
+        // Очищаем поля формы
+        document.getElementById("title").value = "";
+        document.getElementById("content").value = "";
+    })
+    .catch(error => {
+        console.error("Ошибка при отправке нового поста:", error);
+    });
+});
+
+// Функция для загрузки списка постов с сервера
+function fetchPosts() {
+    fetch("/posts")
+    .then(response => response.json())
+    .then(posts => {
+        // Очищаем список постов перед добавлением новых
+        document.getElementById("post-list").innerHTML = "";
+        // Добавляем каждый пост в список
+        posts.forEach(post => {
+            var postElement = document.createElement("li");
+            postElement.textContent = post.title + ": " + post.content;
+            document.getElementById("post-list").appendChild(postElement);
+        });
+    })
+    .catch(error => {
+        console.error("Ошибка при загрузке списка постов:", error);
+    });
+}
+// Функция для загрузки списка постов при загрузке страницы
+document.addEventListener("DOMContentLoaded", function() {
+    fetchPosts();
+});
+
+// Функция для отправки нового поста при отправке формы
+document.getElementById("new-post-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    var formData = new FormData(this);
+
+    fetch("/posts", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(newPost => {
+        // После успешного добавления поста, обновляем список постов
+        fetchPosts();
+        // Очищаем поля формы
+        document.getElementById("title").value = "";
+        document.getElementById("content").value = "";
+    })
+    .catch(error => {
+        console.error("Ошибка при отправке нового поста:", error);
+    });
+});
+
+// Функция для загрузки списка постов с сервера и отображения их заголовков
+function fetchPosts() {
+    fetch("/posts")
+    .then(response => response.json())
+    .then(posts => {
+        // Очищаем список постов перед добавлением новых
+        document.getElementById("post-list").innerHTML = "";
+        // Добавляем каждый заголовок поста в список
+        posts.forEach(post => {
+            var postElement = document.createElement("li");
+            postElement.textContent = post.title;
+            document.getElementById("post-list").appendChild(postElement);
+        });
+    })
+    .catch(error => {
+        console.error("Ошибка при загрузке списка постов:", error);
+    });
+}
+
+
+    </script>
+</body>
+</html>
